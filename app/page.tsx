@@ -4,11 +4,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
+import Header from "@/components/header";
+import HeroContent from "@/components/hero-content";
+import PulsingCircle from "@/components/pulsing-circle";
+import ShaderBackground from "@/components/shader-background";
+
 export default function HomePage() {
   return (
     <main>
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center bg-linear-to-r from-primary/10 via-primary-light/20 to-primary-dark/10 overflow-hidden">
+      {/* <section className="relative h-screen flex items-center justify-center bg-linear-to-r from-primary/10 via-primary-light/20 to-primary-dark/10 overflow-hidden">
         <div className="container-max text-center space-y-8 z-10">
           <h1 className="text-5xl md:text-6xl font-bold">Fashion Redefined</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -22,7 +27,12 @@ export default function HomePage() {
             </Button>
           </Link>
         </div>
-      </section>
+      </section> */}
+      <ShaderBackground>
+        <Header />
+        <HeroContent />
+        {/* <PulsingCircle /> */}
+      </ShaderBackground>
 
       {/* Categories Preview */}
       <section className="container-max py-16">
