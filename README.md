@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Adult Wellness E-Commerce Platform
 
-## Getting Started
+A Next.js-based age-verified e-commerce platform for adult wellness products, built with compliance, security, and discretion as core principles.
 
-First, run the development server:
+## 🔐 Key Features
+
+### Age Verification & Compliance
+
+- **Mandatory age verification** before product access and checkout
+- Integration with trusted providers (Veriff, Persona, Yoti)
+- No guest checkout - accounts required
+- Audit logging for all verification events
+- Admin manual review queue for flagged verifications
+
+### Security & Privacy
+
+- HTTPS-only with HSTS headers
+- Content Security Policy (CSP)
+- Helmet security headers
+- Rate limiting on sensitive endpoints
+- S3 signed URLs for protected product images
+- Encrypted PII storage
+- No raw ID image retention
+
+### Discreet UX
+
+- Neutral product thumbnails for unverified visitors
+- Explicit images only shown to verified users
+- Age gate splash page
+- Professional, clinical design language
+- Discreet packaging and shipping options
+
+## 🛠 Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **Styling**: Tailwind CSS (custom design system)
+- **Authentication**: NextAuth.js
+- **Storage**: AWS S3 (signed URLs)
+- **Verification**: Veriff/Persona/Yoti
+- **Payments**: Adult-friendly PSPs
+
+## 📦 Installation
+
+### Prerequisites
+
+- Node.js 18+ and pnpm
+- PostgreSQL database
+- AWS S3 bucket
+- Verification provider account
+
+### Setup Steps
+
+1. **Install dependencies**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Configure environment**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env
+# Edit .env with your credentials
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Set up database**
 
-## Learn More
+```bash
+pnpm prisma generate
+pnpm prisma migrate dev --name init
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Install AWS SDK**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm add @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5. **Start development**
 
-## Deploy on Vercel
+```bash
+pnpm dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🎨 Design System
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Brand Colors
+
+- `--bg-900: #0B0B0B` - Jet black background
+- `--accent-600: #D97706` - Warm amber accent
+- `--surface: #F8F6F4` - Soft off-white
+- `--text-muted: #6B6B6B` - Muted gray
+
+### Typography
+
+- **Headings**: Montserrat
+- **Body**: Inter (16px, 1.5 line-height)
+
+## 🔌 Key API Endpoints
+
+- `POST /api/verify/start` - Initiate verification
+- `POST /api/verify/webhook` - Provider webhook
+- `GET /api/verify/status` - Get status
+- `GET /api/assets/signed` - Get signed S3 URL
+- `POST /api/admin/verify/manual` - Manual approval
+
+## 🚀 Deployment
+
+### Vercel
+
+```bash
+vercel
+```
+
+Set environment variables in dashboard and configure webhooks.
+
+## 📋 Verification Flow
+
+1. User creates account
+2. Attempts to view product/checkout
+3. Redirected to `/verify`
+4. Completes provider verification
+5. Webhook updates status
+6. User gains full access
+
+## ⚠️ Important
+
+This platform handles adult content and PII. Ensure full compliance with local laws before deployment.

@@ -4,87 +4,94 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color tokens to match dramatic lighting design brief */
-  --background: #000000; /* Pure black background */
-  --foreground: oklch(1 0 0); /* Pure white for text and highlights */
-  --card: oklch(0.95 0 0); /* Light gray for subtle backgrounds */
-  --card-foreground: oklch(0 0 0); /* Black text on light cards */
-  --popover: oklch(1 0 0); /* White for popover backgrounds */
-  --popover-foreground: oklch(0 0 0); /* Black text in popovers */
-  --primary: oklch(0.65 0.2 270); /* Violet accent for highlights */
-  --primary-foreground: oklch(1 0 0); /* White text on violet */
-  --secondary: oklch(0.95 0 0); /* Light gray for secondary elements */
-  --secondary-foreground: oklch(0 0 0); /* Black text on secondary */
-  --muted: oklch(0.25 0 0); /* Dark gray for muted elements */
-  --muted-foreground: oklch(0.95 0 0); /* Light gray text for muted */
-  --accent: oklch(0.65 0.2 270); /* Violet for interactive elements */
-  --accent-foreground: oklch(1 0 0); /* White text on accent */
-  --destructive: oklch(0.6 0.2 40); /* Amber for destructive actions */
-  --destructive-foreground: oklch(1 0 0); /* White text for destructive */
-  --border: oklch(1 0 0); /* White borders for contrast */
-  --input: oklch(0.95 0 0); /* Light gray for inputs */
-  --ring: oklch(0.65 0.2 270); /* Violet for focus rings */
+  /* Brand colors for adult wellness e-commerce */
+  --bg-900: #0b0b0b; /* Jet black primary background */
+  --accent-600: #d97706; /* Warm brown-yellow (amber-600) */
+  --surface: #f8f6f4; /* Soft off-white for cards */
+  --text-muted: #6b6b6b; /* Muted gray text */
+  --white: #ffffff;
+
+  /* Updated color tokens to match brand design */
+  --background: var(--bg-900);
+  --foreground: var(--white);
+  --card: var(--surface);
+  --card-foreground: #0b0b0b;
+  --popover: var(--white);
+  --popover-foreground: #0b0b0b;
+  --primary: var(--accent-600);
+  --primary-foreground: var(--white);
+  --secondary: var(--surface);
+  --secondary-foreground: #0b0b0b;
+  --muted: var(--text-muted);
+  --muted-foreground: #d1d1d1;
+  --accent: var(--accent-600);
+  --accent-foreground: var(--white);
+  --destructive: oklch(0.6 0.2 40);
+  --destructive-foreground: var(--white);
+  --border: #e5e5e5;
+  --input: var(--surface);
+  --ring: var(--accent-600);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.5rem; /* Softer rounded corners */
-  --sidebar: oklch(0 0 0); /* Black sidebar */
-  --sidebar-foreground: oklch(1 0 0); /* White sidebar text */
-  --sidebar-primary: oklch(0.65 0 0); /* Violet for primary sidebar */
-  --sidebar-primary-foreground: oklch(
-    1 0 0
-  ); /* White text on sidebar primary */
-  --sidebar-accent: oklch(0.95 0 0); /* Light gray for sidebar accent */
-  --sidebar-accent-foreground: oklch(0 0 0); /* Black text on sidebar accent */
-  --sidebar-border: oklch(1 0 0); /* White sidebar borders */
-  --sidebar-ring: oklch(0.65 0.2 270); /* Violet for sidebar focus */
-  --font-instrument-serif: "Instrument Serif", serif; /* Instrument Serif font family configuration */
-  /* Added Figtree as the primary font variable */
-  --font-figtree: "Figtree", sans-serif; /* Figtree font family configuration */
+  --radius: 0.5rem;
+  --sidebar: var(--bg-900);
+  --sidebar-foreground: var(--white);
+  --sidebar-primary: var(--accent-600);
+  --sidebar-primary-foreground: var(--white);
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: var(--white);
+  --sidebar-border: #2a2a2a;
+  --sidebar-ring: var(--accent-600);
+
+  /* Font families */
+  --font-heading: "Montserrat", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .dark {
-  /* Dark mode maintains the same dramatic black background theme */
-  --background: #000000;
-  --foreground: oklch(1 0 0);
-  --card: oklch(0.1 0 0);
-  --card-foreground: oklch(1 0 0);
-  --popover: oklch(0.1 0 0);
-  --popover-foreground: oklch(1 0 0);
-  --primary: oklch(0.7 0.25 270);
-  --primary-foreground: oklch(0 0 0);
-  --secondary: oklch(0.15 0 0);
-  --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.15 0 0);
-  --muted-foreground: oklch(0.7 0 0);
-  --accent: oklch(0.7 0.25 270);
-  --accent-foreground: oklch(0 0 0);
+  /* Dark mode maintains the brand black background theme */
+  --background: var(--bg-900);
+  --foreground: var(--white);
+  --card: #1a1a1a;
+  --card-foreground: var(--white);
+  --popover: #1a1a1a;
+  --popover-foreground: var(--white);
+  --primary: var(--accent-600);
+  --primary-foreground: #0b0b0b;
+  --secondary: #2a2a2a;
+  --secondary-foreground: var(--white);
+  --muted: #2a2a2a;
+  --muted-foreground: #a1a1a1;
+  --accent: var(--accent-600);
+  --accent-foreground: #0b0b0b;
   --destructive: oklch(0.5 0.2 40);
-  --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.3 0 0);
-  --input: oklch(0.15 0 0);
-  --ring: oklch(0.7 0.25 270);
+  --destructive-foreground: var(--white);
+  --border: #2a2a2a;
+  --input: #2a2a2a;
+  --ring: var(--accent-600);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.05 0 0);
-  --sidebar-foreground: oklch(1 0 0);
-  --sidebar-primary: oklch(0.7 0.25 270);
-  --sidebar-primary-foreground: oklch(0 0 0);
-  --sidebar-accent: oklch(0.15 0 0);
-  --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(0.3 0 0);
-  --sidebar-ring: oklch(0.7 0.25 270);
-  --font-instrument-serif: "Instrument Serif", serif; /* Instrument Serif font family configuration */
-  /* Added Figtree font variable for dark mode consistency */
-  --font-figtree: "Figtree", sans-serif; /* Figtree font family configuration */
+  --sidebar: #0a0a0a;
+  --sidebar-foreground: var(--white);
+  --sidebar-primary: var(--accent-600);
+  --sidebar-primary-foreground: #0b0b0b;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: var(--white);
+  --sidebar-border: #2a2a2a;
+  --sidebar-ring: var(--accent-600);
 }
 
 @theme inline {
+  --color-bg-900: var(--bg-900);
+  --color-accent-600: var(--accent-600);
+  --color-surface: var(--surface);
+  --color-text-muted: var(--text-muted);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -109,8 +116,8 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: 4px;
+  --radius-md: 8px;
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --color-sidebar: var(--sidebar);
@@ -121,10 +128,9 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-instrument-serif: var(--font-instrument-serif);
-  /* Added Figtree font to theme configuration */
-  --font-sans: var(--font-figtree);
-  --font-figtree: var(--font-figtree);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+  --font-sans: var(--font-body);
 }
 
 @layer base {
@@ -133,11 +139,22 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Set Figtree as the default font family for the entire website */
-    font-family: var(--font-figtree);
+    font-family: var(--font-body);
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
   }
 }
 
-.instrument {
-  font-family: var(--font-instrument-serif);
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
 }

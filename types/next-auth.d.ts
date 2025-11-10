@@ -1,0 +1,34 @@
+/**
+ * TypeScript type extensions for NextAuth
+ * Adds verification status to user session and token
+ */
+
+import "next-auth";
+import "next-auth/jwt";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      email: string;
+      name?: string | null;
+      image?: string | null;
+      isVerified: boolean;
+    };
+  }
+
+  interface User {
+    id: string;
+    email: string;
+    name?: string | null;
+    image?: string | null;
+    isVerified?: boolean;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    isVerified: boolean;
+  }
+}
