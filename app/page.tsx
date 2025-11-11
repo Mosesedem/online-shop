@@ -14,7 +14,7 @@ export default function HomePage() {
       </ShaderBackground>
 
       {/* Categories Preview */}
-      <section className="container-max py-16">
+      <section className="container-max py-16 px-20">
         <h2 className="text-3xl font-bold mb-12 text-deep-oxblood">
           Shop by Category
         </h2>
