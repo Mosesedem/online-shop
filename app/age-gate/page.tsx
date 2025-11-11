@@ -30,22 +30,22 @@ export default function AgeGatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg-900 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-surface rounded-md p-8 shadow-lg">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="max-w-md w-full bg-card rounded-md shadow-lg p-8">
         <div className="flex justify-center mb-6">
           <div className="h-16 w-16 rounded-full bg-accent-600 flex items-center justify-center">
             <Shield className="h-8 w-8 text-white" />
           </div>
         </div>
 
-        <h1 className="font-heading text-2xl font-bold text-center text-bg-900 mb-4">
+        <h1 className="font-heading text-2xl font-bold text-center text-card-foreground mb-4">
           Age Verification Required
         </h1>
 
-        <div className="space-y-4 text-sm text-text-muted mb-6">
+        <div className="space-y-4 text-sm text-muted-foreground mb-6">
           <p>
-            This website contains adult wellness products and content intended
-            for mature audiences.
+            This website contains products and content intended for mature
+            audiences.
           </p>
 
           <p>
@@ -55,19 +55,10 @@ export default function AgeGatePage() {
           <ul className="list-disc list-inside space-y-2 ml-2">
             <li>You are at least 18 years old</li>
             <li>
-              You are legally allowed to view adult content in your jurisdiction
+              You are legally allowed to view this content in your jurisdiction
             </li>
-            <li>You will not share this content with minors</li>
             <li>You agree to our Terms of Service and Privacy Policy</li>
           </ul>
-
-          <p className="text-xs text-center pt-2">
-            We verify age using a trusted third-party provider. We do not retain
-            ID images beyond 30 days.{" "}
-            <a href="/privacy" className="text-accent-600 hover:underline">
-              See our Privacy Policy
-            </a>
-          </p>
         </div>
 
         <div className="flex items-center gap-2 mb-6">
@@ -80,7 +71,7 @@ export default function AgeGatePage() {
           />
           <label
             htmlFor="age-confirm"
-            className="text-sm text-bg-900 cursor-pointer"
+            className="text-sm text-card-foreground cursor-pointer"
           >
             I confirm I am 18 years of age or older
           </label>

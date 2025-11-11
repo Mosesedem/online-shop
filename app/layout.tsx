@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
 import { Instrument_Serif } from "next/font/google";
+import { NextAuthSessionProvider } from "@/components/session-provider";
 import "./globals.css";
 
 const figtree = Figtree({
@@ -52,7 +53,7 @@ html {
       <body
         className={`${figtree.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
       >
-        {children}
+        <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
       </body>
     </html>
   );

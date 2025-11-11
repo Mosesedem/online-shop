@@ -58,12 +58,19 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
         // Fetch fresh verification status from database
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id },
+          select: { isVerified: true },
+        });
+        token.isVerified = dbUser?.isVerified || false;
+      } else if (trigger === "update") {
+        // Refresh verification status on session update
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
           select: { isVerified: true },
         });
         token.isVerified = dbUser?.isVerified || false;
