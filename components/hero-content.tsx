@@ -1,4 +1,5 @@
 "use client";
+import { ArrowRight, ArrowRightSquare, Link } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function HeroContent() {
@@ -13,7 +14,7 @@ export default function HeroContent() {
             filter: "url(#glass-effect)",
           }}
         >
-          <div className="absolute top-0 left-1 right-1 h-px bg-gradient-to-r from-transparent via-baby-pink to-transparent rounded-full" />
+          <div className="absolute top-0 left-1 right-1 h-px bg-linear-to-r from-transparent via-baby-pink to-transparent rounded-full" />
           <span className="text-deep-oxblood text-xs font-light relative z-10">
             ✨ New Paper Shaders Experience
           </span>
@@ -40,15 +41,15 @@ export default function HeroContent() {
         <div className="flex items-center gap-4 flex-wrap">
           <button
             onClick={() => router.push("/categories")}
-            className="px-8 py-3 rounded-full bg-transparent border border-deep-oxblood/30 text-deep-oxblood font-normal text-xs transition-all duration-200 hover:bg-baby-pink-lighter hover:border-deep-oxblood/50 cursor-pointer"
+            className="px-8 py-3 rounded-full bg-transparent flex border border-deep-oxblood/30 text-deep-oxblood font-normal text-xs transition-all duration-200 hover:bg-baby-pink-lighter hover:border-deep-oxblood/50 cursor-pointer"
           >
-            Categories
+            Shop by Categories
           </button>
           <button
             onClick={() => router.push("/shop")}
             className="px-8 py-3 rounded-full bg-deep-oxblood text-white font-normal text-xs transition-all duration-200 hover:bg-oxblood-mid cursor-pointer"
           >
-            Get Started
+            Visit Store{" "}
           </button>
         </div>
       </div>

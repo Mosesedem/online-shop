@@ -84,7 +84,7 @@ export function ProductCard({
   };
 
   return (
-    <div 
+    <div
       className="group relative bg-card rounded-lg overflow-hidden border border-border hover:shadow-lg transition-all cursor-pointer flex flex-col h-full"
       onClick={handleCardClick}
     >
@@ -106,7 +106,9 @@ export function ProductCard({
           <p className="text-[10px] sm:text-xs text-deep-oxblood uppercase font-semibold tracking-wide">
             {category}
           </p>
-          <h3 className="font-semibold text-xs sm:text-sm md:text-base line-clamp-2 mt-0.5 sm:mt-1 leading-tight">{name}</h3>
+          <h3 className="font-semibold text-xs sm:text-sm md:text-base line-clamp-2 mt-0.5 sm:mt-1 leading-tight">
+            {name}
+          </h3>
         </div>
 
         <div className="flex items-center justify-between mt-auto">
@@ -115,7 +117,9 @@ export function ProductCard({
           </span>
           <div className="flex items-center gap-0.5 sm:gap-1">
             <span className="text-[10px] sm:text-xs text-baby-pink">★</span>
-            <span className="text-[10px] sm:text-xs text-muted-foreground">{rating}</span>
+            <span className="text-[10px] sm:text-xs text-muted-foreground">
+              {rating}
+            </span>
           </div>
         </div>
 
@@ -126,11 +130,11 @@ export function ProductCard({
               <Button
                 size="sm"
                 variant="outline"
-                className="flex-1 bg-transparent text-[10px] sm:text-xs md:text-sm h-7 sm:h-8 md:h-9 px-1.5 sm:px-2"
+                // className="flex-1 bg-transparent text-[10px] sm:text-xs md:text-sm h-7 sm:h-8 md:h-9 px-1.5 sm:px-2"
                 onClick={(e) => e.stopPropagation()}
               >
                 <Info className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 sm:mr-1" />
-                <span className="hidden sm:inline">Details</span>
+                {/* <span className="hidden sm:inline">Details</span> */}
               </Button>
             </SheetTrigger>
             <SheetContent
