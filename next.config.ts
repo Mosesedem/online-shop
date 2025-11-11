@@ -70,6 +70,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "**.cloudfront.net", // CloudFront CDN
       },
+      {
+        protocol: "https",
+        hostname: "**",
+      },
     ],
     formats: ["image/avif", "image/webp"],
   },

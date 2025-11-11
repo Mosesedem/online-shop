@@ -28,9 +28,8 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.app",
+  title: "Online Shop",
+  description: "Online store built for you.",
 };
 
 export default function RootLayout({

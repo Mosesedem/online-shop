@@ -1,13 +1,10 @@
 /**
  * GET /api/assets/signed
- * Returns signed S3 URLs for protected product images
- * Only accessible to verified users
+ * Returns signed S3 URLs for product images
+ * Accessible to all users (no authentication required for browsing)
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 
 // AWS SDK v3 for S3 signed URLs
 async function getSignedUrl(key: string): Promise<string> {
@@ -47,25 +44,6 @@ async function getSignedUrl(key: string): Promise<string> {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Get user and check verification
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
-      select: { isVerified: true },
-    });
-
-    if (!user?.isVerified) {
-      return NextResponse.json(
-        { error: "Age verification required" },
-        { status: 403 }
-      );
-    }
-
     const searchParams = request.nextUrl.searchParams;
     const key = searchParams.get("key");
 
@@ -73,7 +51,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Missing image key" }, { status: 400 });
     }
 
-    // Generate signed URL
+    // Generate signed URL - no authentication required
+    // Age gate is handled by middleware
     const signedUrl = await getSignedUrl(key);
 
     return NextResponse.json({

@@ -1,10 +1,15 @@
-import { prisma } from "@/lib/prisma"
-import { type NextRequest, NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma";
+import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
+
     const product = await prisma.product.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         category: true,
         reviews: {
@@ -13,15 +18,21 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
           },
         },
       },
-    })
+    });
 
     if (!product) {
-      return NextResponse.json({ message: "Product not found" }, { status: 404 })
+      return NextResponse.json(
+        { message: "Product not found" },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json(product)
+    return NextResponse.json(product);
   } catch (error) {
-    console.error("Failed to fetch product:", error)
-    return NextResponse.json({ message: "Failed to fetch product" }, { status: 500 })
+    console.error("Failed to fetch product:", error);
+    return NextResponse.json(
+      { message: "Failed to fetch product" },
+      { status: 500 }
+    );
   }
 }

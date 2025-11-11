@@ -1,28 +1,13 @@
-/**
- * Next.js Middleware
- * Route protection for age-verified content
- */
-
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-// Routes that require age verification
-const VERIFIED_REQUIRED_ROUTES = [
-  "/shop",
-  "/products",
-  "/cart",
-  "/checkout",
-  "/orders",
-  "/wishlist",
-  "/saved-items",
-];
+// Routes that require authentication (login only)
+// Users must be logged in to access these routes
+const AUTH_REQUIRED_ROUTES = ["/checkout", "/orders", "/profile"];
 
-// Routes that require authentication but not verification
-const AUTH_REQUIRED_ROUTES = ["/profile", "/verify"];
-
-// Public routes (age gate required)
-const PUBLIC_ROUTES = ["/", "/auth", "/api/auth"];
+// Public routes - accessible to everyone after age gate
+// Includes: /, /shop, /products, /cart, /wishlist, /saved-items, /auth
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -37,47 +22,36 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Get session token
+  // Check age gate acceptance (stored in cookie)
+  // This is the only gate for browsing the site
+  const ageGateAccepted = request.cookies.get("age-gate-accepted");
+
+  if (
+    !ageGateAccepted &&
+    !pathname.startsWith("/age-gate") &&
+    !pathname.startsWith("/auth")
+  ) {
+    const ageGateUrl = new URL("/age-gate", request.url);
+    ageGateUrl.searchParams.set("returnTo", pathname);
+    return NextResponse.redirect(ageGateUrl);
+  }
+
+  // Get session token for auth-required routes
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // Check if route requires verification
-  const requiresVerification = VERIFIED_REQUIRED_ROUTES.some((route) =>
-    pathname.startsWith(route)
-  );
-
+  // Check if route requires authentication
   const requiresAuth = AUTH_REQUIRED_ROUTES.some((route) =>
     pathname.startsWith(route)
   );
 
   // Redirect to login if auth required and not authenticated
-  if ((requiresVerification || requiresAuth) && !token) {
+  if (requiresAuth && !token) {
     const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("returnTo", pathname);
     return NextResponse.redirect(loginUrl);
-  }
-
-  // Check verification status
-  if (requiresVerification && token) {
-    // @ts-ignore - isVerified is added to token in auth config
-    const isVerified = token.isVerified as boolean;
-
-    if (!isVerified) {
-      const verifyUrl = new URL("/verify", request.url);
-      verifyUrl.searchParams.set("returnTo", pathname);
-      return NextResponse.redirect(verifyUrl);
-    }
-  }
-
-  // Check age gate acceptance (stored in cookie)
-  const ageGateAccepted = request.cookies.get("age-gate-accepted");
-
-  if (!ageGateAccepted && !pathname.startsWith("/age-gate")) {
-    const ageGateUrl = new URL("/age-gate", request.url);
-    ageGateUrl.searchParams.set("returnTo", pathname);
-    return NextResponse.redirect(ageGateUrl);
   }
 
   return NextResponse.next();

@@ -25,14 +25,16 @@ export function buttonClass(
   sharp: boolean = false
 ) {
   const base =
-    "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent-600 disabled:opacity-50 disabled:pointer-events-none";
+    "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-baby-pink disabled:opacity-50 disabled:pointer-events-none";
 
   const radius = sharp ? "rounded-sm" : "rounded-md";
 
   const variantClasses: Record<ButtonVariant, string> = {
-    primary: "bg-accent-600 text-white hover:bg-[#B86505] active:bg-[#9A5504]",
-    secondary: "bg-surface text-bg-900 border border-border hover:bg-[#E8E6E4]",
-    ghost: "bg-transparent text-foreground hover:bg-muted/10",
+    primary:
+      "bg-deep-oxblood text-white hover:bg-oxblood-mid active:bg-oxblood-light",
+    secondary:
+      "bg-baby-pink text-deep-oxblood border border-baby-pink-light hover:bg-baby-pink-light",
+    ghost: "bg-transparent text-foreground hover:bg-baby-pink-lighter",
     destructive: "bg-destructive text-white hover:opacity-90",
   };
 
@@ -55,10 +57,10 @@ export function badgeClass(variant: BadgeVariant = "info") {
     "inline-flex items-center px-2.5 py-0.5 rounded-sm text-xs font-medium";
 
   const variantClasses: Record<BadgeVariant, string> = {
-    info: "bg-accent-600/10 text-accent-600 border border-accent-600/20",
+    info: "bg-baby-pink-lighter text-deep-oxblood border border-baby-pink",
     danger: "bg-destructive/10 text-destructive border border-destructive/20",
-    muted: "bg-muted/10 text-text-muted border border-muted/20",
-    success: "bg-green-600/10 text-green-600 border border-green-600/20",
+    muted: "bg-muted text-text-muted border border-border",
+    success: "bg-green-50 text-green-700 border border-green-200",
   };
 
   return cn(base, variantClasses[variant]);
@@ -89,4 +91,4 @@ export function inputClass(error: boolean = false) {
  * Focus ring utility
  */
 export const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-600 focus-visible:ring-offset-2";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-baby-pink focus-visible:ring-offset-2";

@@ -4,47 +4,53 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Brand colors for adult wellness e-commerce */
-  --bg-900: #0b0b0b; /* Jet black primary background */
-  --accent-600: #d97706; /* Warm brown-yellow (amber-600) */
-  --surface: #f8f6f4; /* Soft off-white for cards */
+  /* Brand colors - Baby Pink & Deep Oxblood theme */
+  --baby-pink: #ffb6c1; /* Baby pink - primary accent */
+  --baby-pink-light: #ffc9d0; /* Lighter baby pink */
+  --baby-pink-lighter: #ffe4e8; /* Very light baby pink for backgrounds */
+  --deep-oxblood: #4a0e0e; /* Deep oxblood - primary dark */
+  --oxblood-mid: #6b1515; /* Mid-tone oxblood */
+  --oxblood-light: #8b1f1f; /* Lighter oxblood for hover states */
+  --surface: #ffffff; /* Pure white for cards */
+  --background-light: #fff9fa; /* Very light pink-tinted background */
+  --text-primary: #2d2d2d; /* Warm dark gray for text */
   --text-muted: #6b6b6b; /* Muted gray text */
   --white: #ffffff;
 
-  /* Updated color tokens to match brand design */
-  --background: var(--bg-900);
-  --foreground: var(--white);
+  /* Updated color tokens for light theme */
+  --background: var(--background-light);
+  --foreground: var(--text-primary);
   --card: var(--surface);
-  --card-foreground: #0b0b0b;
-  --popover: var(--white);
-  --popover-foreground: #0b0b0b;
-  --primary: var(--accent-600);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--deep-oxblood);
   --primary-foreground: var(--white);
-  --secondary: var(--surface);
-  --secondary-foreground: #0b0b0b;
-  --muted: var(--text-muted);
-  --muted-foreground: #d1d1d1;
-  --accent: var(--accent-600);
-  --accent-foreground: var(--white);
-  --destructive: oklch(0.6 0.2 40);
+  --secondary: var(--baby-pink);
+  --secondary-foreground: var(--deep-oxblood);
+  --muted: var(--baby-pink-lighter);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--baby-pink);
+  --accent-foreground: var(--deep-oxblood);
+  --destructive: #dc2626;
   --destructive-foreground: var(--white);
-  --border: #e5e5e5;
+  --border: #ffd4dc;
   --input: var(--surface);
-  --ring: var(--accent-600);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --ring: var(--baby-pink);
+  --chart-1: var(--deep-oxblood);
+  --chart-2: var(--baby-pink);
+  --chart-3: var(--oxblood-mid);
+  --chart-4: var(--baby-pink-light);
+  --chart-5: var(--oxblood-light);
   --radius: 0.5rem;
-  --sidebar: var(--bg-900);
-  --sidebar-foreground: var(--white);
-  --sidebar-primary: var(--accent-600);
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--deep-oxblood);
   --sidebar-primary-foreground: var(--white);
-  --sidebar-accent: #1a1a1a;
-  --sidebar-accent-foreground: var(--white);
-  --sidebar-border: #2a2a2a;
-  --sidebar-ring: var(--accent-600);
+  --sidebar-accent: var(--baby-pink-lighter);
+  --sidebar-accent-foreground: var(--deep-oxblood);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--baby-pink);
 
   /* Font families */
   --font-heading: "Montserrat", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -52,45 +58,51 @@
 }
 
 .dark {
-  /* Dark mode maintains the brand black background theme */
-  --background: var(--bg-900);
-  --foreground: var(--white);
-  --card: #1a1a1a;
-  --card-foreground: var(--white);
-  --popover: #1a1a1a;
-  --popover-foreground: var(--white);
-  --primary: var(--accent-600);
-  --primary-foreground: #0b0b0b;
-  --secondary: #2a2a2a;
-  --secondary-foreground: var(--white);
-  --muted: #2a2a2a;
-  --muted-foreground: #a1a1a1;
-  --accent: var(--accent-600);
-  --accent-foreground: #0b0b0b;
-  --destructive: oklch(0.5 0.2 40);
+  /* Keeping a subtle light theme for dark mode - lighter variant */
+  --background: #fff5f7;
+  --foreground: var(--text-primary);
+  --card: var(--surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--deep-oxblood);
+  --primary-foreground: var(--white);
+  --secondary: var(--baby-pink-light);
+  --secondary-foreground: var(--deep-oxblood);
+  --muted: var(--baby-pink-lighter);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--baby-pink);
+  --accent-foreground: var(--deep-oxblood);
+  --destructive: #dc2626;
   --destructive-foreground: var(--white);
-  --border: #2a2a2a;
-  --input: #2a2a2a;
-  --ring: var(--accent-600);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: #0a0a0a;
-  --sidebar-foreground: var(--white);
-  --sidebar-primary: var(--accent-600);
-  --sidebar-primary-foreground: #0b0b0b;
-  --sidebar-accent: #2a2a2a;
-  --sidebar-accent-foreground: var(--white);
-  --sidebar-border: #2a2a2a;
-  --sidebar-ring: var(--accent-600);
+  --border: #ffd4dc;
+  --input: var(--surface);
+  --ring: var(--baby-pink);
+  --chart-1: var(--deep-oxblood);
+  --chart-2: var(--baby-pink);
+  --chart-3: var(--oxblood-mid);
+  --chart-4: var(--baby-pink-light);
+  --chart-5: var(--oxblood-light);
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--deep-oxblood);
+  --sidebar-primary-foreground: var(--white);
+  --sidebar-accent: var(--baby-pink-lighter);
+  --sidebar-accent-foreground: var(--deep-oxblood);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--baby-pink);
 }
 
 @theme inline {
-  --color-bg-900: var(--bg-900);
-  --color-accent-600: var(--accent-600);
+  --color-baby-pink: var(--baby-pink);
+  --color-baby-pink-light: var(--baby-pink-light);
+  --color-baby-pink-lighter: var(--baby-pink-lighter);
+  --color-deep-oxblood: var(--deep-oxblood);
+  --color-oxblood-mid: var(--oxblood-mid);
+  --color-oxblood-light: var(--oxblood-light);
   --color-surface: var(--surface);
+  --color-background-light: var(--background-light);
+  --color-text-primary: var(--text-primary);
   --color-text-muted: var(--text-muted);
   --color-background: var(--background);
   --color-foreground: var(--foreground);

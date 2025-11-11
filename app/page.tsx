@@ -15,7 +15,9 @@ export default function HomePage() {
 
       {/* Categories Preview */}
       <section className="container-max py-16">
-        <h2 className="text-3xl font-bold mb-12">Shop by Category</h2>
+        <h2 className="text-3xl font-bold mb-12 text-deep-oxblood">
+          Shop by Category
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             { name: "Men's Wear", link: "/shop?category=mens" },
@@ -25,10 +27,12 @@ export default function HomePage() {
             <Link
               key={cat.name}
               href={cat.link}
-              className="group relative h-64 rounded-lg overflow-hidden bg-muted flex items-center justify-center hover:shadow-lg transition-shadow"
+              className="group relative h-64 rounded-lg overflow-hidden bg-baby-pink-lighter flex items-center justify-center hover:shadow-lg transition-shadow border border-baby-pink"
             >
-              <div className="absolute inset-0 bg-linear-to-br from-primary/20 to-primary-dark/20 group-hover:from-primary/40 group-hover:to-primary-dark/40 transition-colors" />
-              <h3 className="text-2xl font-bold relative z-10">{cat.name}</h3>
+              <div className="absolute inset-0 bg-linear-to-br from-baby-pink/20 to-deep-oxblood/20 group-hover:from-baby-pink/40 group-hover:to-deep-oxblood/40 transition-colors" />
+              <h3 className="text-2xl font-bold relative z-10 text-deep-oxblood">
+                {cat.name}
+              </h3>
             </Link>
           ))}
         </div>
