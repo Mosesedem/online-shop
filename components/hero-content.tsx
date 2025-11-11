@@ -1,6 +1,9 @@
 "use client";
+import { useRouter } from "next/navigation";
 
 export default function HeroContent() {
+  const router = useRouter();
+
   return (
     <main className="absolute bottom-8 left-8 z-20 max-w-lg">
       <div className="text-left">
@@ -35,10 +38,16 @@ export default function HeroContent() {
 
         {/* Buttons */}
         <div className="flex items-center gap-4 flex-wrap">
-          <button className="px-8 py-3 rounded-full bg-transparent border border-deep-oxblood/30 text-deep-oxblood font-normal text-xs transition-all duration-200 hover:bg-baby-pink-lighter hover:border-deep-oxblood/50 cursor-pointer">
-            Pricing
+          <button
+            onClick={() => router.push("/categories")}
+            className="px-8 py-3 rounded-full bg-transparent border border-deep-oxblood/30 text-deep-oxblood font-normal text-xs transition-all duration-200 hover:bg-baby-pink-lighter hover:border-deep-oxblood/50 cursor-pointer"
+          >
+            Categories
           </button>
-          <button className="px-8 py-3 rounded-full bg-deep-oxblood text-white font-normal text-xs transition-all duration-200 hover:bg-oxblood-mid cursor-pointer">
+          <button
+            onClick={() => router.push("/shop")}
+            className="px-8 py-3 rounded-full bg-deep-oxblood text-white font-normal text-xs transition-all duration-200 hover:bg-oxblood-mid cursor-pointer"
+          >
             Get Started
           </button>
         </div>

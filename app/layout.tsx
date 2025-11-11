@@ -4,6 +4,10 @@ import { Figtree } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
 import { Instrument_Serif } from "next/font/google";
 import { NextAuthSessionProvider } from "@/components/session-provider";
+import { CartProvider } from "@/components/cart-context";
+import { CommerceHeader } from "@/components/commerce-header";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const figtree = Figtree({
@@ -52,7 +56,16 @@ html {
       <body
         className={`${figtree.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
       >
-        <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
+        <NextAuthSessionProvider>
+          <CartProvider>
+            <CommerceHeader />
+            <div className="pb-16 md:pb-0">
+              {children}
+            </div>
+            <MobileBottomNav />
+            <Toaster position="top-center" richColors />
+          </CartProvider>
+        </NextAuthSessionProvider>
       </body>
     </html>
   );

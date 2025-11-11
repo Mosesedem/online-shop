@@ -7,6 +7,8 @@ import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
+import { FileText, Shield, ArrowRight } from "lucide-react"
 
 export default function ProfilePage() {
   const { data: session } = useSession()
@@ -77,8 +79,11 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="container mx-auto px-4 py-6 md:py-12 max-w-4xl">
+      <h1 className="text-3xl font-bold mb-6">My Profile</h1>
+      
+      <div className="space-y-6">
+        <Card>
         <CardHeader>
           <CardTitle>Account Settings</CardTitle>
           <CardDescription>Manage your account information</CardDescription>
@@ -188,6 +193,44 @@ export default function ProfilePage() {
           </form>
         </CardContent>
       </Card>
+
+      {/* Quick Links */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Help & Information</CardTitle>
+          <CardDescription>Policies and support resources</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <Link
+            href="/returns-policy"
+            className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <FileText className="w-5 h-5 text-muted-foreground" />
+              <div>
+                <p className="font-medium">Returns Policy</p>
+                <p className="text-sm text-muted-foreground">Learn about our return process</p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+          </Link>
+
+          <Link
+            href="/privacy-policy"
+            className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <Shield className="w-5 h-5 text-muted-foreground" />
+              <div>
+                <p className="font-medium">Privacy Policy</p>
+                <p className="text-sm text-muted-foreground">How we protect your data</p>
+              </div>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </CardContent>
+      </Card>
+      </div>
     </div>
   )
 }

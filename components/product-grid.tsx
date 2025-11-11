@@ -18,7 +18,7 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
   const productList = Array.isArray(products) ? products : [];
 
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
       {productList.map((product) => (
         <ProductCard
           key={product.id}

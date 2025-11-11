@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useDebounce } from "@/hooks/use-debounce"
@@ -24,6 +24,11 @@ export function SearchBar({ onSearch, placeholder = "Search products..." }: Sear
   const handleSearch = useCallback(() => {
     onSearch(debouncedQuery)
   }, [debouncedQuery, onSearch])
+
+  // Trigger search when debounced query changes
+  useEffect(() => {
+    handleSearch()
+  }, [handleSearch])
 
   return (
     <div className="relative w-full">
