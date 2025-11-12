@@ -5,6 +5,7 @@ import { ProductGrid } from "@/components/product-grid";
 import { SearchBar } from "@/components/search-bar";
 import { AddToCartDialog } from "@/components/add-to-cart-dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Filter, SlidersHorizontal, X } from "lucide-react";
@@ -32,7 +33,7 @@ export default function ShopPage() {
 
   useEffect(() => {
     fetchProducts();
-  }, [searchQuery, selectedCategory, sortBy, priceRange]);
+  }, [searchQuery, selectedCategory, sortBy, priceRange, currentPage]);
 
   const fetchProducts = async () => {
     setIsLoading(true);
@@ -82,13 +83,10 @@ export default function ShopPage() {
       }
 
       setProducts(filtered);
-      const calculatedPages = Math.ceil(filtered.length / itemsPerPage);
-      setTotalPages(calculatedPages);
       
-      // Reset to page 1 if current page exceeds total pages
-      if (currentPage > calculatedPages && calculatedPages > 0) {
-        setCurrentPage(1);
-      }
+      // Calculate total pages based on filtered results
+      const calculatedPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
+      setTotalPages(calculatedPages);
     } catch (error) {
       console.error("Failed to fetch products:", error);
       setProducts([]);
@@ -181,16 +179,44 @@ export default function ShopPage() {
 
       {/* Price Range */}
       <div>
-        <label className="text-sm font-semibold mb-3 block">
-          Price Range: ₦{priceRange[0].toLocaleString()} - ₦{priceRange[1].toLocaleString()}
-        </label>
+        <label className="text-sm font-semibold mb-3 block">Price Range</label>
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <div>
+            <label className="text-xs text-muted-foreground mb-1 block">Min</label>
+            <Input
+              type="number"
+              placeholder="Min"
+              value={priceRange[0]}
+              onChange={(e) => {
+                const val = parseInt(e.target.value) || 0;
+                handlePriceRangeChange([Math.max(0, val), priceRange[1]]);
+              }}
+              className="h-9"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground mb-1 block">Max</label>
+            <Input
+              type="number"
+              placeholder="Max"
+              value={priceRange[1]}
+              onChange={(e) => {
+                const val = parseInt(e.target.value) || 100000;
+                handlePriceRangeChange([priceRange[0], Math.min(100000, val)]);
+              }}
+              className="h-9"
+            />
+          </div>
+        </div>
+        <div className="text-xs text-muted-foreground mb-2">
+          ₦{priceRange[0].toLocaleString()} - ₦{priceRange[1].toLocaleString()}
+        </div>
         <Slider
           min={0}
           max={100000}
           step={1000}
           value={priceRange}
           onValueChange={handlePriceRangeChange}
-          className="mt-2"
         />
       </div>
 

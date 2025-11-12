@@ -20,7 +20,7 @@ export function CommerceHeader() {
   const navLinks = [
     { href: "/shop", label: "Shop" },
     { href: "/categories", label: "Categories" },
-    { href: "/about", label: "About" },
+    { href: "/faqs", label: "FAQs" },
   ];
 
   return (

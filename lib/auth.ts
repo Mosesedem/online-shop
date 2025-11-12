@@ -55,25 +55,28 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         // Add verification status to session for middleware access
         session.user.isVerified = token.isVerified as boolean;
+        session.user.role = token.role as string;
       }
       return session;
     },
     async jwt({ token, user, trigger }) {
       if (user) {
         token.id = user.id;
-        // Fetch fresh verification status from database
+        // Fetch fresh verification status and role from database
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id },
-          select: { isVerified: true },
+          select: { isVerified: true, role: true },
         });
         token.isVerified = dbUser?.isVerified || false;
+        token.role = dbUser?.role || "USER";
       } else if (trigger === "update") {
-        // Refresh verification status on session update
+        // Refresh verification status and role on session update
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
-          select: { isVerified: true },
+          select: { isVerified: true, role: true },
         });
         token.isVerified = dbUser?.isVerified || false;
+        token.role = dbUser?.role || "USER";
       }
       return token;
     },

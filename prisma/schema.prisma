@@ -15,6 +15,7 @@ model User {
   phone         String?
   image         String?
   emailVerified DateTime?
+  role          UserRole  @default(USER)
 
   // Age verification fields
   isVerified   Boolean @default(false)
@@ -303,6 +304,11 @@ enum PaymentStatus {
   COMPLETED
   FAILED
   CANCELLED
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
 
 enum AgeCategory {

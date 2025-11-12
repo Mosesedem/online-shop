@@ -11,8 +11,12 @@ export default async function AdminLayout({
 }) {
   const session = await getServerSession(authOptions)
 
-  // Basic admin check - in production, check user role in database
-  if (!session?.user?.email || !session.user.email.includes("admin")) {
+  // Check if user is authenticated and has admin role
+  if (!session?.user) {
+    redirect("/auth/login")
+  }
+
+  if (session.user.role !== "ADMIN") {
     redirect("/")
   }
 

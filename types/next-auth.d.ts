@@ -14,6 +14,7 @@ declare module "next-auth" {
       name?: string | null;
       image?: string | null;
       isVerified: boolean;
+      role: string;
     };
   }
 
@@ -23,6 +24,7 @@ declare module "next-auth" {
     name?: string | null;
     image?: string | null;
     isVerified?: boolean;
+    role?: string;
   }
 }
 
@@ -30,5 +32,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     isVerified: boolean;
+    role: string;
   }
 }

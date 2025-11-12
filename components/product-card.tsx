@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heart, ShoppingCart, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,6 +40,33 @@ export function ProductCard({
   const { addItem } = useCartContext();
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isCheckingSaved, setIsCheckingSaved] = useState(false);
+
+  // Fetch saved state when component mounts or session changes
+  useEffect(() => {
+    const checkSavedStatus = async () => {
+      if (!session?.user) {
+        setIsSaved(false);
+        return;
+      }
+
+      setIsCheckingSaved(true);
+      try {
+        const res = await fetch("/api/saved-items");
+        if (res.ok) {
+          const savedItems = await res.json();
+          const saved = savedItems.some((item: any) => item.productId === id);
+          setIsSaved(saved);
+        }
+      } catch (error) {
+        console.error("Failed to check saved status:", error);
+      } finally {
+        setIsCheckingSaved(false);
+      }
+    };
+
+    checkSavedStatus();
+  }, [session, id]);
 
   const handleCardClick = () => {
     router.push(`/products/${id}`);
@@ -102,14 +129,26 @@ export function ProductCard({
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-2.5 sm:p-3 md:p-4 space-y-1.5 sm:space-y-2">
-        <div className="flex-1 min-h-0">
+        <div className="flex-1 min-h-0 flex justify-between ">
           <p className="text-[10px] sm:text-xs text-deep-oxblood uppercase font-semibold tracking-wide">
             {category}
           </p>
-          <h3 className="font-semibold text-xs sm:text-sm md:text-base line-clamp-2 mt-0.5 sm:mt-1 leading-tight">
-            {name}
-          </h3>
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={handleToggleSave}
+            className="h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9"
+          >
+            <Heart
+              className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4"
+              fill={isSaved ? "currentColor" : "none"}
+            />
+          </Button>
         </div>
+        <h3 className="font-semibold text-xs sm:text-sm md:text-base line-clamp-2 mt-0.5 sm:mt-1 leading-tight">
+          {name}
+        </h3>
+        {/* </div> */}
 
         <div className="flex items-center justify-between mt-auto">
           <span className="text-sm sm:text-base md:text-lg font-bold text-deep-oxblood">
@@ -130,7 +169,7 @@ export function ProductCard({
               <Button
                 size="sm"
                 variant="outline"
-                // className="flex-1 bg-transparent text-[10px] sm:text-xs md:text-sm h-7 sm:h-8 md:h-9 px-1.5 sm:px-2"
+                className="flex-1 bg-transparent text-[10px] sm:text-xs md:text-sm h-7 sm:h-8 md:h-9 px-1.5 sm:px-2"
                 onClick={(e) => e.stopPropagation()}
               >
                 <Info className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 sm:mr-1" />
@@ -156,7 +195,7 @@ export function ProductCard({
             <span className="hidden xs:inline">Add</span>
           </Button>
 
-          <Button
+          {/* <Button
             size="icon"
             variant="ghost"
             onClick={handleToggleSave}
@@ -166,7 +205,7 @@ export function ProductCard({
               className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4"
               fill={isSaved ? "currentColor" : "none"}
             />
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>
