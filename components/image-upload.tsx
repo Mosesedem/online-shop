@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CldUploadWidget } from "next-cloudinary";
+// Removed Cloudinary widget import
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,7 +16,12 @@ interface ImageUploadProps {
   label?: string;
 }
 
-export function ImageUpload({ value = [], onChange, maxImages = 5, label = "Images" }: ImageUploadProps) {
+export function ImageUpload({
+  value = [],
+  onChange,
+  maxImages = 5,
+  label = "Images",
+}: ImageUploadProps) {
   const [urlInput, setUrlInput] = useState("");
 
   const handleUploadSuccess = (result: any) => {
@@ -54,67 +59,64 @@ export function ImageUpload({ value = [], onChange, maxImages = 5, label = "Imag
         </TabsList>
 
         <TabsContent value="upload" className="space-y-4">
-          {!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || !process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ? (
+          {!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
+          !process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET ? (
             <div className="p-4 border border-yellow-500 bg-yellow-50 rounded-md">
               <p className="text-sm text-yellow-800 font-medium mb-2">
                 ⚠️ Cloudinary Not Configured
               </p>
               <p className="text-xs text-yellow-700 mb-2">
-                To enable image uploads, add these to your <code className="bg-yellow-100 px-1 rounded">.env.local</code>:
+                To enable image uploads, add these to your{" "}
+                <code className="bg-yellow-100 px-1 rounded">.env.local</code>:
               </p>
               <pre className="text-xs bg-yellow-100 p-2 rounded overflow-x-auto">
-{`NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+                {`NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
 NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_preset_name`}
               </pre>
               <p className="text-xs text-yellow-700 mt-2">
-                See <code className="bg-yellow-100 px-1 rounded">CLOUDINARY_SETUP.md</code> for instructions.
+                See{" "}
+                <code className="bg-yellow-100 px-1 rounded">
+                  CLOUDINARY_SETUP.md
+                </code>{" "}
+                for instructions.
               </p>
             </div>
           ) : (
             <>
-              <CldUploadWidget
-                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                onSuccess={handleUploadSuccess}
-                onError={(error) => {
-                  console.error("Upload error:", error);
-                  alert("Upload failed. Please check your Cloudinary configuration.");
+              <input
+                type="file"
+                accept="image/*"
+                disabled={value.length >= maxImages}
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const formData = new FormData();
+                  formData.append("file", file);
+                  try {
+                    const res = await fetch("/api/upload", {
+                      method: "POST",
+                      body: formData,
+                    });
+                    const data = await res.json();
+                    if (data.secure_url) {
+                      handleUploadSuccess({
+                        info: { secure_url: data.secure_url },
+                      });
+                    } else {
+                      throw new Error(data.error || "Upload failed");
+                    }
+                  } catch (error) {
+                    console.error("Upload error:", error);
+                    alert(
+                      "Upload failed. Please check your Cloudinary configuration."
+                    );
+                  }
                 }}
-                options={{
-                  cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-                  maxFiles: 1,
-                  resourceType: "image",
-                  clientAllowedFormats: ["jpg", "jpeg", "png", "gif", "webp"],
-                  maxFileSize: 10000000, // 10MB
-                  sources: ["local", "url", "camera"],
-                }}
-              >
-                {({ open }) => (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      if (typeof open === 'function') {
-                        try {
-                          open();
-                        } catch (error) {
-                          console.error("Failed to open upload widget:", error);
-                          alert("Upload widget failed to open. Please use the URL tab instead or check your Cloudinary configuration.");
-                        }
-                      } else {
-                        console.error("Upload widget not initialized. Open function is:", typeof open);
-                        alert("Upload widget is not available. Please use the URL tab to add images, or check that Cloudinary is properly configured.");
-                      }
-                    }}
-                    disabled={value.length >= maxImages}
-                    className="w-full"
-                  >
-                    <Upload className="w-4 h-4 mr-2" />
-                    Upload Image {value.length > 0 && `(${value.length}/${maxImages})`}
-                  </Button>
-                )}
-              </CldUploadWidget>
+                className="w-full border rounded p-2"
+              />
               <p className="text-xs text-muted-foreground">
-                Click to upload images from your device. Max {maxImages} images.
+                Click to select and upload images from your device. Max{" "}
+                {maxImages} images.
               </p>
             </>
           )}
@@ -144,10 +146,20 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_preset_name`}
             </div>
             <div className="text-xs space-y-1">
               <p className="text-muted-foreground">
-                ✓ Paste image URL and press Enter or click Add. Max {maxImages} images.
+                ✓ Paste image URL and press Enter or click Add. Max {maxImages}{" "}
+                images.
               </p>
               <p className="text-muted-foreground">
-                💡 <strong>Tip:</strong> Upload to <a href="https://imgur.com/upload" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Imgur</a> or any image host, then paste the URL here.
+                💡 <strong>Tip:</strong> Upload to{" "}
+                <a
+                  href="https://imgur.com/upload"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  Imgur
+                </a>{" "}
+                or any image host, then paste the URL here.
               </p>
             </div>
           </div>
@@ -158,7 +170,10 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_preset_name`}
       {value.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
           {value.map((url, index) => (
-            <div key={index} className="relative group aspect-square rounded-lg overflow-hidden border">
+            <div
+              key={index}
+              className="relative group aspect-square rounded-lg overflow-hidden border"
+            >
               <Image
                 src={url}
                 alt={`Image ${index + 1}`}

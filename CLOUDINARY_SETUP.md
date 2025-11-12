@@ -9,6 +9,7 @@
 ## 2. Get Your Credentials
 
 From your Cloudinary Dashboard, you'll need:
+
 - **Cloud Name**
 - **API Key**
 - **API Secret**
@@ -34,12 +35,14 @@ Add these to your `.env.local` file:
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name_here
 NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=online-shop-products
 
+
 # Optional: For server-side operations
 CLOUDINARY_API_KEY=your_api_key_here
 CLOUDINARY_API_SECRET=your_api_secret_here
 ```
 
-**Important**: 
+**Important**:
+
 - Replace `your_cloud_name_here` with your actual Cloud Name
 - Replace `online-shop-products` with your upload preset name
 - The `NEXT_PUBLIC_` prefix makes these available in the browser
@@ -87,6 +90,7 @@ The `ImageUpload` component provides:
 ### Automatic Optimizations
 
 Cloudinary automatically:
+
 - Optimizes image size
 - Converts to modern formats (WebP, AVIF)
 - Generates responsive images
@@ -110,16 +114,19 @@ https://res.cloudinary.com/demo/image/upload/q_auto,f_auto/sample.jpg
 ## Troubleshooting
 
 ### Upload button doesn't work
+
 - Check that `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` is set
 - Verify the upload preset is set to "Unsigned"
 - Check browser console for errors
 
 ### Images not displaying
+
 - Verify the Cloud Name is correct
 - Check that images are set to "Public" access mode
 - Inspect the image URL in browser dev tools
 
 ### "Upload preset not found"
+
 - Go to Cloudinary Dashboard → Settings → Upload
 - Verify the preset name matches your `.env.local`
 - Make sure the preset is saved and active
@@ -134,6 +141,7 @@ https://res.cloudinary.com/demo/image/upload/q_auto,f_auto/sample.jpg
 ## Free Tier Limits
 
 Cloudinary free tier includes:
+
 - 25 GB storage
 - 25 GB bandwidth/month
 - 25,000 transformations/month
