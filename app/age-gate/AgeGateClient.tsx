@@ -24,7 +24,7 @@ export default function AgeGateClient({ searchParams }: ClientProps) {
       "age-gate-accepted=true; path=/; max-age=31536000; SameSite=Strict";
 
     // Redirect to intended destination
-    router.push(returnTo);
+    router.push("/");
   };
 
   return (
