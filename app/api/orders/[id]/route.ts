@@ -1,10 +1,13 @@
-import { prisma } from "@/lib/prisma"
-import { type NextRequest, NextResponse } from "next/server"
+import { prisma } from "@/lib/prisma";
+import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const order = await prisma.order.findUnique({
-      where: { id: params.id },
+      where: { id: (await params).id },
       include: {
         items: {
           include: {
@@ -12,15 +15,18 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
           },
         },
       },
-    })
+    });
 
     if (!order) {
-      return NextResponse.json({ message: "Order not found" }, { status: 404 })
+      return NextResponse.json({ message: "Order not found" }, { status: 404 });
     }
 
-    return NextResponse.json(order)
+    return NextResponse.json(order);
   } catch (error) {
-    console.error("Failed to fetch order:", error)
-    return NextResponse.json({ message: "Failed to fetch order" }, { status: 500 })
+    console.error("Failed to fetch order:", error);
+    return NextResponse.json(
+      { message: "Failed to fetch order" },
+      { status: 500 }
+    );
   }
 }

@@ -1,26 +1,33 @@
-import { prisma } from "./prisma"
+import { prisma } from "./prisma";
 
 export async function searchProducts(query: string) {
   if (!query || query.length < 2) {
-    return []
+    return [];
   }
 
-  // Fuzzy search using Postgres text search
+  // Partial matching (non-fuzzy fallback)
   const products = await prisma.product.findMany({
     where: {
       OR: [
+        // {
+        //   name: {
+        //     search: query,  // <-- Commented out: Requires Prisma 5.0+
+        //   },
+        // },
+        // {
+        //   description: {
+        //     search: query,  // <-- Commented out: Requires Prisma 5.0+
+        //   },
+        // },
         {
           name: {
-            search: query,
+            contains: query,
+            mode: "insensitive",
           },
         },
         {
           description: {
-            search: query,
-          },
-        },
-        {
-          name: {
+            // <-- Added this for consistency
             contains: query,
             mode: "insensitive",
           },
@@ -34,7 +41,7 @@ export async function searchProducts(query: string) {
       },
     },
     take: 20,
-  })
+  });
 
-  return products
+  return products;
 }
