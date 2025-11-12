@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useCartContext } from "@/components/cart-context";
 import { toast } from "sonner";
 import { ShoppingCart, Heart, Star } from "lucide-react";
@@ -46,7 +45,9 @@ export function ProductDetailsSheet({ productId }: ProductDetailsSheetProps) {
         if (session?.user) {
           const savedRes = await fetch("/api/saved-items");
           const savedItems = await savedRes.json();
-          const saved = savedItems.some((item: any) => item.productId === productId);
+          const saved = savedItems.some(
+            (item: any) => item.productId === productId
+          );
           setIsSaved(saved);
         }
       } catch (error) {
@@ -115,137 +116,125 @@ export function ProductDetailsSheet({ productId }: ProductDetailsSheetProps) {
   }
 
   return (
-    <ScrollArea className="h-full pr-4">
-      <div className="space-y-6 pb-6">
-        {/* Header */}
-        <div className="space-y-2">
-          <p className="text-xs text-deep-oxblood uppercase font-semibold">
-            {product.category?.name || "Product"}
-          </p>
-          <h2 className="text-2xl font-bold">{product.name}</h2>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className="w-3 h-3 fill-baby-pink text-baby-pink"
+    <div className="h-full overflow-y-auto p-4 space-y-6 pb-6">
+      {/* Header */}
+      <div className="space-y-2">
+        <p className="text-xs text-deep-oxblood uppercase font-semibold">
+          {product.category?.name || "Product"}
+        </p>
+        <h2 className="text-2xl font-bold">{product.name}</h2>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-3 h-3 fill-baby-pink text-baby-pink" />
+            ))}
+          </div>
+          <span className="text-xs text-muted-foreground">(4.5)</span>
+        </div>
+        <p className="text-2xl font-bold text-deep-oxblood">
+          ₦
+          {typeof product.price === "number"
+            ? product.price.toLocaleString()
+            : "0"}
+        </p>
+      </div>
+
+      {/* Image Gallery */}
+      <div className="space-y-3">
+        <div className="aspect-square relative rounded-lg overflow-hidden bg-baby-pink-lighter">
+          <Image
+            src={product.images?.[selectedImage] || "/placeholder.svg"}
+            alt={product.name}
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        {product.images && product.images.length > 1 && (
+          <div className="grid grid-cols-4 gap-2">
+            {product.images.map((img, idx) => (
+              <button
+                key={idx}
+                onClick={() => setSelectedImage(idx)}
+                className={`relative aspect-square rounded-md overflow-hidden border-2 transition-all ${
+                  selectedImage === idx
+                    ? "border-deep-oxblood"
+                    : "border-transparent hover:border-gray-300"
+                }`}
+              >
+                <Image
+                  src={img}
+                  alt={`${product.name} ${idx + 1}`}
+                  fill
+                  className="object-cover"
                 />
-              ))}
-            </div>
-            <span className="text-xs text-muted-foreground">(4.5)</span>
+              </button>
+            ))}
           </div>
-          <p className="text-2xl font-bold text-deep-oxblood">
-            ₦{typeof product.price === "number" ? product.price.toLocaleString() : "0"}
-          </p>
-        </div>
+        )}
+      </div>
 
-        {/* Image Gallery */}
-        <div className="space-y-3">
-          <div className="aspect-square relative rounded-lg overflow-hidden bg-baby-pink-lighter">
-            <Image
-              src={product.images?.[selectedImage] || "/placeholder.svg"}
-              alt={product.name}
-              fill
-              className="object-cover"
-            />
-          </div>
+      {/* Description */}
+      <div className="border-t pt-4">
+        <h3 className="font-semibold mb-2">Description</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          {product.description}
+        </p>
+      </div>
 
-          {product.images && product.images.length > 1 && (
-            <div className="grid grid-cols-4 gap-2">
-              {product.images.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedImage(idx)}
-                  className={`relative aspect-square rounded-md overflow-hidden border-2 transition-all ${
-                    selectedImage === idx
-                      ? "border-deep-oxblood"
-                      : "border-transparent hover:border-gray-300"
-                  }`}
-                >
-                  <Image
-                    src={img}
-                    alt={`${product.name} ${idx + 1}`}
-                    fill
-                    className="object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Description */}
-        <div className="border-t pt-4">
-          <h3 className="font-semibold mb-2">Description</h3>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {product.description}
-          </p>
-        </div>
-
-        {/* Quantity & Actions */}
-        <div className="space-y-4 border-t pt-4">
-          <div>
-            <label className="text-sm font-medium mb-2 block">Quantity</label>
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              >
-                −
-              </Button>
-              <Input
-                type="number"
-                value={quantity}
-                onChange={(e) =>
-                  setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-                }
-                className="w-20 text-center"
-                min="1"
-              />
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setQuantity(quantity + 1)}
-              >
-                +
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <Button
-              onClick={handleAddToCart}
-              className="flex-1"
-              size="lg"
-            >
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Add to Cart
-            </Button>
+      {/* Quantity & Actions */}
+      <div className="space-y-4 border-t pt-4">
+        <div>
+          <label className="text-sm font-medium mb-2 block">Quantity</label>
+          <div className="flex items-center gap-3">
             <Button
               variant="outline"
-              size="lg"
-              onClick={handleToggleSave}
+              size="icon"
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
             >
-              <Heart
-                className="w-4 h-4"
-                fill={isSaved ? "currentColor" : "none"}
-              />
+              −
+            </Button>
+            <Input
+              type="number"
+              value={quantity}
+              onChange={(e) =>
+                setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+              }
+              className="w-20 text-center"
+              min="1"
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setQuantity(quantity + 1)}
+            >
+              +
             </Button>
           </div>
-
-          {product.stock < 10 && product.stock > 0 && (
-            <p className="text-sm text-orange-600">
-              Only {product.stock} left in stock!
-            </p>
-          )}
-          {product.stock === 0 && (
-            <p className="text-sm text-red-600 font-semibold">
-              Out of stock
-            </p>
-          )}
         </div>
+
+        <div className="flex gap-3">
+          <Button onClick={handleAddToCart} className="flex-1" size="lg">
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            Add to Cart
+          </Button>
+          <Button variant="outline" size="lg" onClick={handleToggleSave}>
+            <Heart
+              className="w-4 h-4"
+              fill={isSaved ? "currentColor" : "none"}
+            />
+          </Button>
+        </div>
+
+        {product.stock < 10 && product.stock > 0 && (
+          <p className="text-sm text-orange-600">
+            Only {product.stock} left in stock!
+          </p>
+        )}
+        {product.stock === 0 && (
+          <p className="text-sm text-red-600 font-semibold">Out of stock</p>
+        )}
       </div>
-    </ScrollArea>
+    </div>
   );
 }
