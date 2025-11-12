@@ -11,19 +11,31 @@ import {
   Package,
   CreditCard,
   LogOut,
+  FolderTree,
+  Star,
+  CheckCircle,
+  MessageSquare,
 } from "lucide-react";
 
 export function AdminSidebar() {
   const pathname = usePathname();
 
-  const isActive = (path: string) => pathname.startsWith(path);
+  const isActive = (path: string) => {
+    if (path === "/admin") {
+      return pathname === "/admin";
+    }
+    return pathname.startsWith(path);
+  };
 
   const menuItems = [
     { href: "/admin", icon: LayoutGrid, label: "Dashboard" },
     { href: "/admin/products", icon: Package, label: "Products" },
+    { href: "/admin/categories", icon: FolderTree, label: "Categories" },
     { href: "/admin/orders", icon: ShoppingCart, label: "Orders" },
     { href: "/admin/users", icon: Users, label: "Users" },
+    { href: "/admin/reviews", icon: Star, label: "Reviews" },
     { href: "/admin/payments", icon: CreditCard, label: "Payments" },
+    { href: "/admin/verifications", icon: CheckCircle, label: "Verifications" },
   ];
 
   return (

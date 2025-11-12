@@ -393,7 +393,9 @@ export default function ProductsAdminPage() {
                           )}
                         </div>
                         <div>
-                          <p className="font-medium">{product.name}</p>
+                          <Link href={`/admin/products/${product.id}`} className="font-medium hover:underline">
+                            {product.name}
+                          </Link>
                           <p className="text-xs text-muted-foreground">{product.ageCategory}</p>
                         </div>
                       </div>

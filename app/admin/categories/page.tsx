@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -148,9 +149,11 @@ export default function CategoriesAdminPage() {
           <h1 className="text-2xl md:text-3xl font-bold">Categories</h1>
           <p className="text-muted-foreground">{categories.length} categories</p>
         </div>
-        <Button onClick={handleNew}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Category
+        <Button asChild>
+          <Link href="/admin/categories/create">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Category
+          </Link>
         </Button>
       </div>
 
