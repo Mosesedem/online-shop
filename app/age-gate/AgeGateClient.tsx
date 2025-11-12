@@ -22,9 +22,9 @@ export default function AgeGateClient({ searchParams }: ClientProps) {
     // Set cookie to remember acceptance (client-only)
     document.cookie =
       "age-gate-accepted=true; path=/; max-age=31536000; SameSite=Strict";
-
+    window.location.href = returnTo;
     // Redirect to intended destination
-    router.push("/");
+    // router.push("/");
   };
 
   return (
