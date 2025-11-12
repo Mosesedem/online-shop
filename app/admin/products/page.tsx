@@ -7,7 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { BulkActionBar } from "@/components/admin/bulk-action-bar";
 import {
   Select,
@@ -16,7 +23,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Edit, Trash2, Plus, Search, Filter, Download, Upload, AlertCircle } from "lucide-react";
+import {
+  Edit,
+  Trash2,
+  Plus,
+  Search,
+  Filter,
+  Download,
+  Upload,
+  AlertCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 
 interface Product {
@@ -42,28 +58,49 @@ export default function ProductsAdminPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  
+
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [stockFilter, setStockFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("name");
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalProducts, setTotalProducts] = useState(0);
+
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(currentPage, pageSize);
     fetchCategories();
   }, []);
 
   useEffect(() => {
-    applyFilters();
-  }, [products, searchQuery, selectedCategory, stockFilter, sortBy]);
+    setCurrentPage(1);
+    fetchProducts(1, pageSize);
+  }, [searchQuery, selectedCategory, stockFilter, sortBy]);
 
-  const fetchProducts = async () => {
+  useEffect(() => {
+    fetchProducts(currentPage, pageSize);
+  }, [currentPage, pageSize]);
+
+  const fetchProducts = async (page = 1, limit = 10) => {
+    setIsLoading(true);
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      search: searchQuery,
+      category: selectedCategory,
+      stock: stockFilter,
+      sort: sortBy,
+    });
     try {
-      const res = await fetch("/api/admin/products");
+      const res = await fetch(`/api/admin/products?${params}`);
       if (res.ok) {
         const data = await res.json();
-        setProducts(data);
+        setProducts(data.products || data);
+        setTotalProducts(data.total || data.length);
+        setCurrentPage(page);
       }
     } catch (error) {
       console.error("Failed to fetch products:", error);
@@ -83,63 +120,6 @@ export default function ProductsAdminPage() {
     } catch (error) {
       console.error("Failed to fetch categories:", error);
     }
-  };
-
-  const applyFilters = () => {
-    let filtered = [...products];
-
-    // Search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (p) =>
-          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.sku?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Category filter
-    if (selectedCategory && selectedCategory !== "all") {
-      filtered = filtered.filter((p) => p.category.id === selectedCategory);
-    }
-
-    // Stock filter
-    if (stockFilter !== "all") {
-      switch (stockFilter) {
-        case "low":
-          filtered = filtered.filter((p) => p.stock > 0 && p.stock < 10);
-          break;
-        case "out":
-          filtered = filtered.filter((p) => p.stock === 0);
-          break;
-        case "in":
-          filtered = filtered.filter((p) => p.stock >= 10);
-          break;
-      }
-    }
-
-    // Sorting
-    switch (sortBy) {
-      case "name":
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "price-asc":
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case "price-desc":
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case "stock-asc":
-        filtered.sort((a, b) => a.stock - b.stock);
-        break;
-      case "stock-desc":
-        filtered.sort((a, b) => b.stock - a.stock);
-        break;
-      case "newest":
-        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        break;
-    }
-
-    setFilteredProducts(filtered);
   };
 
   const handleDelete = async (id: string) => {
@@ -163,7 +143,12 @@ export default function ProductsAdminPage() {
   };
 
   const handleBulkDelete = async () => {
-    if (!confirm(`Are you sure you want to delete ${selectedIds.length} products?`)) return;
+    if (
+      !confirm(
+        `Are you sure you want to delete ${selectedIds.length} products?`
+      )
+    )
+      return;
 
     try {
       const res = await fetch("/api/admin/products/bulk-delete", {
@@ -186,10 +171,10 @@ export default function ProductsAdminPage() {
   };
 
   const toggleSelectAll = () => {
-    if (selectedIds.length === filteredProducts.length) {
+    if (selectedIds.length === products.length) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(filteredProducts.map((p) => p.id));
+      setSelectedIds(products.map((p) => p.id));
     }
   };
 
@@ -248,7 +233,7 @@ export default function ProductsAdminPage() {
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">Products</h1>
           <p className="text-muted-foreground">
-            {filteredProducts.length} of {products.length} products
+            {products.length} of {totalProducts} products
           </p>
         </div>
         <div className="flex gap-2">
@@ -287,7 +272,10 @@ export default function ProductsAdminPage() {
             </div>
 
             {/* Category */}
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <Select
+              value={selectedCategory}
+              onValueChange={setSelectedCategory}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
@@ -330,8 +318,16 @@ export default function ProductsAdminPage() {
             </Select>
           </div>
 
-          {(searchQuery || selectedCategory !== "all" || stockFilter !== "all" || sortBy !== "name") && (
-            <Button variant="outline" size="sm" onClick={clearFilters} className="mt-4">
+          {(searchQuery ||
+            selectedCategory !== "all" ||
+            stockFilter !== "all" ||
+            sortBy !== "name") && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearFilters}
+              className="mt-4"
+            >
               Clear Filters
             </Button>
           )}
@@ -346,7 +342,10 @@ export default function ProductsAdminPage() {
               <TableRow>
                 <TableHead className="w-12">
                   <Checkbox
-                    checked={selectedIds.length === filteredProducts.length && filteredProducts.length > 0}
+                    checked={
+                      selectedIds.length === products.length &&
+                      products.length > 0
+                    }
                     onCheckedChange={toggleSelectAll}
                   />
                 </TableHead>
@@ -359,20 +358,24 @@ export default function ProductsAdminPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredProducts.length === 0 ? (
+              {products.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-12">
                     <div className="flex flex-col items-center gap-2">
                       <AlertCircle className="w-12 h-12 text-muted-foreground" />
                       <p className="text-muted-foreground">No products found</p>
-                      <Button variant="outline" size="sm" onClick={clearFilters}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={clearFilters}
+                      >
                         Clear Filters
                       </Button>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredProducts.map((product) => (
+                products.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell>
                       <Checkbox
@@ -382,7 +385,7 @@ export default function ProductsAdminPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="relative w-12 h-12 rounded-md overflow-hidden bg-muted flex-shrink-0">
+                        <div className="relative w-12 h-12 rounded-md overflow-hidden bg-muted shrink-0">
                           {product.images?.[0] && (
                             <Image
                               src={product.images[0] || "/placeholder.svg"}
@@ -393,21 +396,30 @@ export default function ProductsAdminPage() {
                           )}
                         </div>
                         <div>
-                          <Link href={`/admin/products/${product.id}`} className="font-medium hover:underline">
+                          <Link
+                            href={`/admin/products/${product.id}`}
+                            className="font-medium hover:underline"
+                          >
                             {product.name}
                           </Link>
-                          <p className="text-xs text-muted-foreground">{product.ageCategory}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {product.ageCategory}
+                          </p>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <span className="text-sm text-muted-foreground">{product.sku || "-"}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {product.sku || "-"}
+                      </span>
                     </TableCell>
                     <TableCell>
                       <span className="text-sm">{product.category.name}</span>
                     </TableCell>
                     <TableCell>
-                      <span className="font-semibold">₦{product.price.toLocaleString()}</span>
+                      <span className="font-semibold">
+                        ₦{product.price.toLocaleString()}
+                      </span>
                     </TableCell>
                     <TableCell>
                       <span
@@ -453,6 +465,35 @@ export default function ProductsAdminPage() {
         onBulkDelete={handleBulkDelete}
         onExport={handleExport}
       />
+
+      {/* Pagination */}
+      {totalProducts > pageSize && (
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            Page {currentPage} of {Math.ceil(totalProducts / pageSize)}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              setCurrentPage(
+                Math.min(Math.ceil(totalProducts / pageSize), currentPage + 1)
+              )
+            }
+            disabled={currentPage === Math.ceil(totalProducts / pageSize)}
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </main>
   );
 }

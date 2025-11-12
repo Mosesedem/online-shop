@@ -6,10 +6,22 @@ import { SearchBar } from "@/components/search-bar";
 import { AddToCartDialog } from "@/components/add-to-cart-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Filter, SlidersHorizontal, X } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export default function ShopPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -22,74 +34,58 @@ export default function ShopPage() {
   const [sortBy, setSortBy] = useState("featured");
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const itemsPerPage = 12;
 
   useEffect(() => {
     fetchCategories();
-    fetchProducts();
+    fetchProducts(1); // Initial load
   }, []);
 
   useEffect(() => {
-    fetchProducts();
-  }, [searchQuery, selectedCategory, sortBy, priceRange, currentPage]);
+    fetchProducts(1);
+  }, [searchQuery, selectedCategory, sortBy, priceRange]);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (page: number = 1) => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.append("search", searchQuery);
       if (selectedCategory) params.append("category", selectedCategory);
-      params.append("page", currentPage.toString());
+      params.append("page", page.toString());
       params.append("limit", itemsPerPage.toString());
+      params.append("sort", sortBy);
+      params.append("minPrice", priceRange[0].toString());
+      params.append("maxPrice", priceRange[1].toString());
 
       const res = await fetch(`/api/products?${params.toString()}`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
       const data = await res.json();
 
-      let productList = [];
-      if (Array.isArray(data)) {
-        productList = data;
-      } else if (data.products && Array.isArray(data.products)) {
-        productList = data.products;
-      } else if (data.data && Array.isArray(data.data)) {
-        productList = data.data;
+      if (data.products && Array.isArray(data.products)) {
+        setProducts(data.products);
+        setTotalProducts(data.total);
+        setCurrentPage(page);
+        const calculatedPages = Math.max(
+          1,
+          Math.ceil(data.total / itemsPerPage)
+        );
+        setTotalPages(calculatedPages);
       } else {
         console.error("Unexpected products response format:", data);
-        productList = [];
+        setProducts([]);
+        setTotalProducts(0);
+        setTotalPages(1);
       }
-
-      // Apply client-side filtering and sorting
-      let filtered = productList.filter(
-        (p: any) => p.price >= priceRange[0] && p.price <= priceRange[1]
-      );
-
-      // Apply sorting
-      switch (sortBy) {
-        case "price-asc":
-          filtered.sort((a: any, b: any) => a.price - b.price);
-          break;
-        case "price-desc":
-          filtered.sort((a: any, b: any) => b.price - a.price);
-          break;
-        case "name-asc":
-          filtered.sort((a: any, b: any) => a.name.localeCompare(b.name));
-          break;
-        case "name-desc":
-          filtered.sort((a: any, b: any) => b.name.localeCompare(a.name));
-          break;
-        default:
-          break;
-      }
-
-      setProducts(filtered);
-      
-      // Calculate total pages based on filtered results
-      const calculatedPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
-      setTotalPages(calculatedPages);
     } catch (error) {
       console.error("Failed to fetch products:", error);
       setProducts([]);
+      setTotalProducts(0);
+      setTotalPages(1);
     } finally {
       setIsLoading(false);
     }
@@ -146,9 +142,7 @@ export default function ShopPage() {
   };
 
   // Calculate paginated products
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedProducts = products.slice(startIndex, endIndex);
+  const paginatedProducts = products;
 
   const handleAddToCart = (productId: string, quantity: number) => {
     const product = products.find((p) => p.id === productId);
@@ -182,7 +176,9 @@ export default function ShopPage() {
         <label className="text-sm font-semibold mb-3 block">Price Range</label>
         <div className="grid grid-cols-2 gap-2 mb-3">
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">Min</label>
+            <label className="text-xs text-muted-foreground mb-1 block">
+              Min
+            </label>
             <Input
               type="number"
               placeholder="Min"
@@ -195,7 +191,9 @@ export default function ShopPage() {
             />
           </div>
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">Max</label>
+            <label className="text-xs text-muted-foreground mb-1 block">
+              Max
+            </label>
             <Input
               type="number"
               placeholder="Max"
@@ -257,7 +255,9 @@ export default function ShopPage() {
     <main className="container mx-auto px-4 py-4 sm:py-6 md:py-8 max-w-7xl">
       {/* Header */}
       <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Shop Our Collection</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">
+          Shop Our Collection
+        </h1>
 
         {/* Search */}
         <div className="mb-4">
@@ -325,7 +325,7 @@ export default function ShopPage() {
 
       <div className="flex gap-6">
         {/* Desktop Sidebar Filters */}
-        <aside className="hidden md:block w-64 flex-shrink-0">
+        <aside className="hidden md:block w-64 shrink-0">
           <div className="sticky top-20 space-y-6 border rounded-lg p-4">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold flex items-center gap-2">
@@ -354,36 +354,66 @@ export default function ShopPage() {
             <>
               <div className="mb-4 text-sm text-muted-foreground">
                 Showing {(currentPage - 1) * itemsPerPage + 1}-
-                {Math.min(currentPage * itemsPerPage, products.length)} of {products.length} products
+                {Math.min(currentPage * itemsPerPage, totalProducts)} of{" "}
+                {totalProducts} products
               </div>
-              <ProductGrid products={paginatedProducts} onAddToCart={handleAddToCart} />
-              
+              <ProductGrid
+                products={paginatedProducts}
+                onAddToCart={handleAddToCart}
+              />
+
               {/* Pagination */}
               {totalPages > 1 && (
                 <div className="flex items-center justify-center gap-2 mt-8">
                   <Button
                     variant="outline"
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    onClick={() => {
+                      const newPage = Math.max(1, currentPage - 1);
+                      fetchProducts(newPage);
+                    }}
                     disabled={currentPage === 1}
                   >
                     Previous
                   </Button>
                   <div className="flex items-center gap-1">
-                    {[...Array(totalPages)].map((_, i) => (
-                      <Button
-                        key={i}
-                        variant={currentPage === i + 1 ? "default" : "outline"}
-                        onClick={() => setCurrentPage(i + 1)}
-                        size="sm"
-                        className="w-10"
-                      >
-                        {i + 1}
-                      </Button>
-                    ))}
+                    {[...Array(Math.min(totalPages, 10))].map((_, i) => {
+                      const pageNum = i + 1;
+                      return (
+                        <Button
+                          key={i}
+                          variant={
+                            currentPage === pageNum ? "default" : "outline"
+                          }
+                          onClick={() => fetchProducts(pageNum)}
+                          size="sm"
+                          className="w-10"
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    })}
+                    {totalPages > 10 && (
+                      <>
+                        <span className="px-2">...</span>
+                        <Button
+                          variant={
+                            currentPage === totalPages ? "default" : "outline"
+                          }
+                          onClick={() => fetchProducts(totalPages)}
+                          size="sm"
+                          className="w-10"
+                        >
+                          {totalPages}
+                        </Button>
+                      </>
+                    )}
                   </div>
                   <Button
                     variant="outline"
-                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    onClick={() => {
+                      const newPage = Math.min(totalPages, currentPage + 1);
+                      fetchProducts(newPage);
+                    }}
                     disabled={currentPage === totalPages}
                   >
                     Next
